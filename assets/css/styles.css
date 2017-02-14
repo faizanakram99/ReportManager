@@ -16,11 +16,13 @@ header, footer {
 form.form-inline {
   min-height: 530px; }
   form.form-inline div.form-group {
-    display: block !important;
-    margin: 40px auto;
-    text-align: center; }
+    display: flex !important;
+    justify-content: space-between;
+    margin: 40px auto; }
     form.form-inline div.form-group input {
       min-width: initial; }
+      form.form-inline div.form-group input.ui-timepicker-input {
+        width: 100px; }
   form.form-inline th, form.form-inline td {
     text-align: center; }
   form.form-inline .table-head {
@@ -28,5 +30,7 @@ form.form-inline {
     background: #404040; }
   form.form-inline input {
     min-width: 100%; }
+    form.form-inline input.durationpicker-duration {
+      min-width: initial; }
 
 /*# sourceMappingURL=styles.css.map */
