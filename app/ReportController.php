@@ -19,16 +19,16 @@ class ReportController
             $report['login'] = $reportEntity->report['login'];
             $report['logout'] = $reportEntity->report['logout'];
 
-            $ids = explode(",", $reportEntity->report['ids']);
-            $tickets = explode(",", $reportEntity->report['tickets']);
-            $spent_time = explode(",", $reportEntity->report['spent_time']);
-            $logged_time = explode(",", $reportEntity->report['logged_time']);
-            $remarks = explode(",", $reportEntity->report['remarks']);
+            $reportdetail_id = explode("|#|", $reportEntity->report['reportdetail_id']);
+            $tickets = explode("|#|", $reportEntity->report['tickets']);
+            $spent_time = explode("|#|", $reportEntity->report['spent_time']);
+            $logged_time = explode("|#|", $reportEntity->report['logged_time']);
+            $remarks = explode("|#|", $reportEntity->report['remarks']);
             
             $len = count($tickets);
 
             for($i = 0; $i < $len ; $i++){
-                $report['reportdetails'][$i]['ids'] = $ids[$i];
+                $report['reportdetails'][$i]['reportdetail_id'] = $reportdetail_id[$i];
                 $report['reportdetails'][$i]['tickets'] = $tickets[$i];
                 $report['reportdetails'][$i]['spent_time'] = $spent_time[$i];
                 $report['reportdetails'][$i]['logged_time'] = $logged_time[$i];
@@ -45,6 +45,12 @@ class ReportController
     public function updateAction($date = null){
         $reportEntity = new ReportEntity($date);
         $reportEntity->setReport($this->data);
+    }
+
+
+    public function deleteAction($date= null){
+        $reportEntity = new ReportEntity($date);
+        $reportEntity->deleteReport($date, $this->data);
     }
 
 

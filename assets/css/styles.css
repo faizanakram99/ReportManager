@@ -33,4 +33,17 @@ form.form-inline {
     form.form-inline input.durationpicker-duration {
       min-width: initial; }
 
+@media print {
+  div.top-form input, div.top-form label {
+    display: inline-block !important;
+    width: 32%;
+    float: left; }
+    div.top-form input.print-margin, div.top-form label.print-margin {
+      margin: auto 2%; }
+  div.top-form label {
+    padding-left: 10px; }
+
+  .vertical-offset-print {
+    height: 30px; } }
+
 /*# sourceMappingURL=styles.css.map */

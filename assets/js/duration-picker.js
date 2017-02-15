@@ -12,7 +12,6 @@
         this.jqchildren = this.jqitem.children();
         this.element = $(element);
         this.setup();
-        this.resize();
         this.jqchildren.find(".durationpicker-duration").trigger('change');
         var _self = this;
     };
@@ -36,34 +35,6 @@
                 value = value.slice(0, -1);
                 element.val(value);
             });
-            // $(".durationpicker-duration").trigger();
-            window.addEventListener('resize', this.resize);
-        },
-        resize: function() {
-            if (!this.settings.responsive) {
-                return
-            }
-            var padding = parseInt(this.jqitem.css('padding-left').split('px')[0]) + parseInt(this.jqitem.css('padding-right').split('px')[0]);
-            var minwidth = padding;
-            var minheight = padding;
-            this.jqchildren.each(function () {
-                var ths = $(this);
-                minwidth = minwidth + ths.outerWidth();
-                minheight = minheight + ths.outerHeight();
-            });
-            if (this.jqitem.parent().width() < minwidth) {
-                this.jqchildren.each(function () {
-                    var ths = $(this);
-                    ths.css('display', 'block');
-                });
-                this.jqitem.css('height', minheight)
-            }
-            else {
-                this.jqchildren.each(function () {
-                    var ths = $(this);
-                    ths.css('display', 'inline-block');
-                });
-            }
         },
         getitem: function () {
             return this.jqitem;
@@ -88,7 +59,7 @@
             var settings = $.extend(true, {}, $.fn.durationPicker.defaults, options);
         }
         else {
-            var settings = $.extend(true, {}, {classname: 'form-control', responsive: true, type:'number'}, options);
+            var settings = $.extend(true, {}, {classname: 'form-control', type:'number'}, options);
         }
 
         // return this.each(function () {
@@ -107,7 +78,7 @@
     function get_stages(settings){
         var stages = [];
         for (var key in Object.keys(settings)){
-            if (['classname', 'responsive', 'type'].indexOf(Object.keys(settings)[key]) == -1) {
+            if (['classname', 'type'].indexOf(Object.keys(settings)[key]) == -1) {
                 stages.push(Object.keys(settings)[key]);
             }
         }
@@ -118,7 +89,7 @@
         var html = '<div class="durationpicker-container ' + settings.classname + '">';
         var type = settings.type;
         for (var item in stages){
-            html += '<div class="durationpicker-innercontainer"><input min="' + settings[stages[item]]['min'] + '" max="' + settings[stages[item]]['max'] + '" placeholder="0" type="' + type + '" id="duration-' + stages[item] + '" class="durationpicker-duration" ><span class="durationpicker-label">' + settings[stages[item]]['label'] + '</span></div>';
+            html += '<div class="durationpicker-innercontainer"><input min="' + settings[stages[item]]['min'] + '" max="' + settings[stages[item]]['max'] + '" placeholder="'+settings[stages[item]]['placeholder']+'" type="' + type + '" id="duration-' + stages[item] + '" class="durationpicker-duration" ><span class="durationpicker-label">' + settings[stages[item]]['label'] + '</span></div>';
         }
         html += '</div>';
 
@@ -142,8 +113,7 @@
         	max: 59
         },
         classname: 'form-control',
-        type: 'number',
-        responsive: true
+        type: 'number'
     };
 
     $.fn.durationPicker.Constructor = durationPicker;

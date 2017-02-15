@@ -20,11 +20,11 @@ class ReportEntity
             die('Connect Error ('.$this->conn->connect_errno.') '.$this->conn->connect_error);
         }
         $result = $this->conn->query("SELECT report.*,
-                                (SELECT GROUP_CONCAT(id) FROM reportdetails where report_id = report.id) as ids, 
-                                (SELECT GROUP_CONCAT(tickets) FROM reportdetails where report_id = report.id) as tickets,
-                                (SELECT GROUP_CONCAT(spent_time) FROM reportdetails where report_id = report.id) as spent_time,
-                                (SELECT GROUP_CONCAT(logged_time) FROM reportdetails where report_id = report.id) as logged_time,
-                                (SELECT GROUP_CONCAT(remarks) FROM reportdetails where report_id = report.id) as remarks
+                                (SELECT GROUP_CONCAT(id SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as reportdetail_id, 
+                                (SELECT GROUP_CONCAT(tickets SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as tickets,
+                                (SELECT GROUP_CONCAT(spent_time SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as spent_time,
+                                (SELECT GROUP_CONCAT(logged_time SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as logged_time,
+                                (SELECT GROUP_CONCAT(remarks SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as remarks
                                 FROM report WHERE report.date ='".$date."'");
         if($result->num_rows) $this->report = $result->fetch_assoc();
     }
@@ -62,13 +62,13 @@ class ReportEntity
                                 WHERE date = '$data->date'");
 
             foreach($data->reportdetails as $reportdetail){
-                if($reportdetail->ids != null || $reportdetail->ids != ''){
+                if($reportdetail->reportdetail_id != null || $reportdetail->reportdetail_id != ''){
                     $this->conn->query("UPDATE reportdetails 
                                     SET tickets = '$reportdetail->tickets', 
                                     spent_time = '$reportdetail->spent_time',
                                     logged_time = '$reportdetail->logged_time',
                                     remarks = '$reportdetail->remarks'
-                                    WHERE id = '$reportdetail->ids'");
+                                    WHERE id = '$reportdetail->reportdetail_id'");
                 }
                 else{
                     $this->conn->query("INSERT INTO reportdetails (report_id, tickets, spent_time, logged_time, remarks)
@@ -77,6 +77,19 @@ class ReportEntity
                 }                
             }
             echo "Updated successfully";
+        }
+    }
+
+    public function deleteReport($date, $reportdetail_id = null){
+        if($this->report){
+            if($reportdetail_id) {
+                $this->conn->query("DELETE FROM reportdetails where id ='".$reportdetail_id."'");
+                echo "Deleted report line successfully!";
+            }
+            else{
+                $this->conn->query("DELETE FROM report where date ='".$date."'");
+                echo "Deleted report successfully!";
+            }
         }
     }
 }

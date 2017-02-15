@@ -17,4 +17,8 @@ switch ($_GET['action']){
     case 'email':
     $reportController->emailAction();
     break;
+
+    case 'delete':
+    $reportController->deleteAction($_GET['date']);
+    break;
 }

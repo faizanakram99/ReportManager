@@ -2,22 +2,22 @@
     background-color: white;
     border: 1px solid darkgrey;
     display: inline-block;
-    min-width:160px;
-    width: auto;
+    min-width:100px;
+    width: 100px;
+    padding: 6px 0;
 }
 
 .durationpicker-innercontainer {
     display: inline-block;
-    width: auto;
-    padding-right: 5px;
+    width: 50%;
 }
 
 .durationpicker-duration {
-    width: 50px;
     display: inline-block;
     border: none;
+    width: 42px;
     padding-left: 10%;
-    text-align: right;
+    text-align: center;
 }
 
 .durationpicker-label {

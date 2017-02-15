@@ -9,26 +9,61 @@
     <link href="assets/css/duration-picker.css" rel="stylesheet"/>
     <link href="assets/css/styles.css" rel="stylesheet"/>
     <title>Report Manager</title>
+    <script>
+        if (!Function.prototype.bind) {
+            Function.prototype.bind = function(oThis) {
+                if (typeof this !== 'function') {
+                    // closest thing possible to the ECMAScript 5
+                    // internal IsCallable function
+                    throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+                }
+
+                var aArgs   = Array.prototype.slice.call(arguments, 1),
+                    fToBind = this,
+                    fNOP    = function() {},
+                    fBound  = function() {
+                        return fToBind.apply(this instanceof fNOP
+                                ? this
+                                : oThis,
+                            aArgs.concat(Array.prototype.slice.call(arguments)));
+                    };
+
+                if (this.prototype) {
+                    // Function.prototype doesn't have a prototype property
+                    fNOP.prototype = this.prototype;
+                }
+                fBound.prototype = new fNOP();
+
+                return fBound;
+            };
+        }
+    </script>
 </head>
 <body>
-<header>
+<header class="hidden-print">
     <div class="container-fluid">
         <h1 class="text-center">Report Manager</h1>
     </div>
 </header>
 <div class="container-fluid" ng-controller="mainController">
     <form class="form-inline">
-        <div class="form-group">
+        <div class="visible-print hidden-lg hidden-md hidden-sm hidden-xs top-form">
+            <label>Login</label>
+            <label class="print-margin">Date</label>
+            <label>Logout</label>
+        </div>
+        <div class="form-group top-form">
             <input type="text" format="HH:mm a" moment-picker="report.login" class="form-control input-block"
                    name="logintime" ng-model="login" placeholder="Login time"/>
             <input type="text" format="MMM Do YYYY" today="true" moment-picker="currentdate"
-                   class="form-control input-block" name="date"
+                   class="form-control print-margin input-block" name="date"
                    ng-model="currentdate" title="Date of report"
                    change="report.onChange()" ng-model-options="{ updateOn: 'blur' }"/>
             <input type="text" format="HH:mm a" moment-picker="report.logout" class="form-control input-block"
                    name="logout" ng-model="logout" placeholder="Logout time"/>
         </div>
         <div class="clearfix"></div>
+        <div class="visible-print hidden-lg hidden-md hidden-sm hidden-xs vertical-offset-print"></div>
         <table class="table table-striped table-hover">
             <thead class="table-head">
             <th class="col-xs-1">#</th>
@@ -36,7 +71,7 @@
             <th class="col-xs-1">Time spent</th>
             <th class="col-xs-1">Time logged</th>
             <th class="col-xs-6">Remarks</th>
-            <th class="col-xs-1">Actions</th>
+            <th class="col-xs-1 hidden-print">Actions</th>
             </thead>
             <tbody>
             <tr ng-repeat="reportdetail in report.reportdetails track by $index">
@@ -49,7 +84,7 @@
                            duration-picker name="timelogged"
                            ng-model="reportdetail.logged_time"/></td>
                 <td><input type="text" class="form-control duration" name="remarks" ng-model="reportdetail.remarks"/></td>
-                <td>
+                <td class="hidden-print">
                     <button type="button" class="btn btn-default btn-info"
                             ng-show="report.reportdetails.length - 1 == $index" ng-click="add($index)">
                         <span class="glyphicon glyphicon-plus"></span>
@@ -62,8 +97,10 @@
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-default btn-info" ng-click="action('save')">Save</button>
-        <button type="button" class="btn btn-default btn-info" ng-click="action('email')">Email</button>
+        <button type="button" class="btn hidden-print btn-default btn-info" ng-click="action('save')">Save</button>
+        <button type="button" class="btn hidden-print btn-default btn-danger" ng-click="action('delete')">Delete</button>
+        <button type="button" class="btn hidden-print btn-default btn-info" ng-click="action('email')">Email</button>
+        <button type="button" class="btn hidden-print btn-default btn-info" ng-click="preview()">Preview</button>
     </form>
 </div>
 <br/>

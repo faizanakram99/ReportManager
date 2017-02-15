@@ -47,3 +47,22 @@ form.form-inline {
     }
   }
 }
+
+@media print {
+  div.top-form {
+    input, label {
+      display: inline-block !important;
+      width: 32%;
+      float: left;
+      &.print-margin {
+        margin: auto 2%;
+      }
+    }
+    label{
+      padding-left: 10px;
+    }
+  }
+  .vertical-offset-print{
+    height: 30px;
+  }
+}
