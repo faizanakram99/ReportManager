@@ -92,34 +92,37 @@ form.form-inline {
     }
   }
   div.contenteditable{
-    word-break: break-all;
+    word-break: break-word;
     max-width: 275px;
     width: 100%;
     height: auto;
     padding-right: 35px;
+    &.less-padding{
+      padding-right: 15px;
+    }
   }
   input.form-control{
     width: 100%;
   }
-  div.top-form {;
-    display: flex !important;;
+  div.top-form {
+    display: flex !important;
     justify-content:space-between;
   };
-  div.top-form input:nth-of-type(2){;
+  div.top-form input:nth-of-type(2){
     text-align:center !important;
   };
 
-  div.top-form label {;
+  div.top-form label {
     padding-right: 140px;
     padding-left: 25px;
     &.less-left-padding{
       padding-left: 15px;
     }
   };
-  .vertical-offset-print {;
+  .vertical-offset-print {
     height: 30px;;
   };
-  .visible-print{;
+  .visible-print{
     display: block !important;;
   };
 }

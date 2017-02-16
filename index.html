@@ -70,8 +70,8 @@
         </table>
         <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="action('save')">Save</button>
         <button type="button" class="btn hidden-print hideElements btn-default btn-danger" ng-click="action('delete')">Delete</button>
-        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="email(this.report.date)">Email</button>
-        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="preview(this.report.date)">Preview</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="email()">Email</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="preview()">Preview</button>
     </form>
     <div id="imagecontainer">
         <div class="form-inline" id="form">
@@ -103,7 +103,7 @@
                 <tbody>
                 <tr ng-repeat="reportdetail in report.reportdetails track by $index">
                     <td>{{$index+1}}</td>
-                    <td><input type="text" class="form-control" name="tickets" ng-model="reportdetail.tickets"/></td>
+                    <td><div contenteditable class="form-control contenteditable less-padding" name="tickets" ng-model="reportdetail.tickets"/></td>
                     <td><input type="text" class="form-control duration"
                                duration-picker name="timespent"
                                ng-model="reportdetail.spent_time" /></td>

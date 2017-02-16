@@ -1,4 +1,4 @@
-function createImageFromHTML(){
+function createImageFromHTML(param){
     var div = document.querySelector('#imagecontainer');
     var selecteddate = document.querySelector("#currentdate").value;
     var canvas = document.createElement('canvas');
@@ -36,9 +36,9 @@ function createImageFromHTML(){
                 ajax.onreadystatechange = function() {
                     console.log(ajax.responseText);
                 }
-                ajax.send("imgData="+canvasData);
-                div.style.display = "none";
+                ajax.send("imgData="+canvasData);                
             }
+            div.style.display = "none";
 
         }
     });

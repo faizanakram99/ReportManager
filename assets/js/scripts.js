@@ -78,11 +78,11 @@ angular.module("reportsApp", ['moment-picker','myDirectives'])
             });            
         };
 
-        $scope.preview = function(param){
+        $scope.preview = function(){
             createImageFromHTML('preview');
         }
 
-        $scope.email = function(param){
+        $scope.email = function(){
             createImageFromHTML('email');
         }
     });

@@ -61,11 +61,13 @@ form.form-inline {
     #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n):hover {
       background: white; }
   #imagecontainer div.contenteditable {
-    word-break: break-all;
+    word-break: break-word;
     max-width: 275px;
     width: 100%;
     height: auto;
     padding-right: 35px; }
+    #imagecontainer div.contenteditable.less-padding {
+      padding-right: 15px; }
   #imagecontainer input.form-control {
     width: 100%; }
   #imagecontainer div.top-form {
