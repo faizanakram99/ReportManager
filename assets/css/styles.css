@@ -45,5 +45,42 @@ form.form-inline {
 
   .vertical-offset-print {
     height: 30px; } }
+#imagecontainer {
+  display: none;
+  max-width: 700px;
+  margin: 0 auto; }
+  #imagecontainer table.table-striped.table-hover thead {
+    color: #fefefe;
+    background: #404040; }
+  #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n+1) {
+    background: #efefef; }
+    #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n+1):hover {
+      background: #f9f9f9; }
+  #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n) {
+    background: #fbfbfb; }
+    #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n):hover {
+      background: white; }
+  #imagecontainer div.contenteditable {
+    word-break: break-all;
+    max-width: 275px;
+    width: 100%;
+    height: auto;
+    padding-right: 35px; }
+  #imagecontainer input.form-control {
+    width: 100%; }
+  #imagecontainer div.top-form {
+    display: flex !important;
+    justify-content: space-between; }
+  #imagecontainer div.top-form input:nth-of-type(2) {
+    text-align: center !important; }
+  #imagecontainer div.top-form label {
+    padding-right: 140px;
+    padding-left: 25px; }
+    #imagecontainer div.top-form label.less-left-padding {
+      padding-left: 15px; }
+  #imagecontainer .vertical-offset-print {
+    height: 30px; }
+  #imagecontainer .visible-print {
+    display: block !important; }
 
 /*# sourceMappingURL=styles.css.map */

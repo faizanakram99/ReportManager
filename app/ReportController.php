@@ -1,5 +1,6 @@
 <?php
 require_once "ReportEntity.php";
+require_once "Email.php";
 
 class ReportController
 {
@@ -9,7 +10,7 @@ class ReportController
     public function __construct($data = null){
         if ($data){
             $this->data = json_decode($data);
-        }        
+        }
     }
 
     public function editAction($date = null){
@@ -54,7 +55,19 @@ class ReportController
     }
 
 
-    public function emailAction(){
+    public function emailAction($rawdata,$date){
+        $img = str_replace('data:image/png;base64,', '', $rawdata);
+        $img = str_replace(' ', '+', $img);
+        $data = base64_decode($img);
+        //$file = uniqid() . '.png';
+
+        $email = new Email();
+        $email->emailAction($data,$date);
+
+        header("Content-type:image/png");
+        echo $data;
+//        $success = file_put_contents($file, $data);
+//        print $file;
         
     }
 }

@@ -1,4 +1,4 @@
-angular.module("reportsApp", ['moment-picker'])
+angular.module("reportsApp", ['moment-picker','myDirectives'])
     .directive("durationPicker", function () {
         return {
             restrict: 'A',
@@ -78,7 +78,11 @@ angular.module("reportsApp", ['moment-picker'])
             });            
         };
 
-        $scope.preview = function(){
-            $window.location = "/app/preview.php";
+        $scope.preview = function(param){
+            createImageFromHTML('preview');
+        }
+
+        $scope.email = function(param){
+            createImageFromHTML('email');
         }
     });

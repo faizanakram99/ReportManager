@@ -5,7 +5,6 @@
         "vendor-dir": "app/vendor"
     },
     "require": {
-        "swiftmailer/swiftmailer": "@stable",
-        "knplabs/knp-snappy": "^0.4.3"
+        "swiftmailer/swiftmailer": "@stable"
     }
 }

@@ -15,7 +15,7 @@ switch ($_GET['action']){
     break;
 
     case 'email':
-    $reportController->emailAction();
+    $reportController->emailAction($_POST['imgData'],$_GET['date']);
     break;
 
     case 'delete':

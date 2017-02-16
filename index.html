@@ -9,44 +9,15 @@
     <link href="assets/css/duration-picker.css" rel="stylesheet"/>
     <link href="assets/css/styles.css" rel="stylesheet"/>
     <title>Report Manager</title>
-    <script>
-        if (!Function.prototype.bind) {
-            Function.prototype.bind = function(oThis) {
-                if (typeof this !== 'function') {
-                    // closest thing possible to the ECMAScript 5
-                    // internal IsCallable function
-                    throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
-                }
-
-                var aArgs   = Array.prototype.slice.call(arguments, 1),
-                    fToBind = this,
-                    fNOP    = function() {},
-                    fBound  = function() {
-                        return fToBind.apply(this instanceof fNOP
-                                ? this
-                                : oThis,
-                            aArgs.concat(Array.prototype.slice.call(arguments)));
-                    };
-
-                if (this.prototype) {
-                    // Function.prototype doesn't have a prototype property
-                    fNOP.prototype = this.prototype;
-                }
-                fBound.prototype = new fNOP();
-
-                return fBound;
-            };
-        }
-    </script>
 </head>
 <body>
-<header class="hidden-print">
+<header class="hidden-print hideElements">
     <div class="container-fluid">
         <h1 class="text-center">Report Manager</h1>
     </div>
 </header>
 <div class="container-fluid" ng-controller="mainController">
-    <form class="form-inline">
+    <form class="form-inline" id="form">
         <div class="visible-print hidden-lg hidden-md hidden-sm hidden-xs top-form">
             <label>Login</label>
             <label class="print-margin">Date</label>
@@ -71,7 +42,7 @@
             <th class="col-xs-1">Time spent</th>
             <th class="col-xs-1">Time logged</th>
             <th class="col-xs-6">Remarks</th>
-            <th class="col-xs-1 hidden-print">Actions</th>
+            <th class="col-xs-1 hidden-print hideElements">Actions</th>
             </thead>
             <tbody>
             <tr ng-repeat="reportdetail in report.reportdetails track by $index">
@@ -80,11 +51,11 @@
                 <td><input type="text" class="form-control duration"
                            duration-picker name="timespent"
                            ng-model="reportdetail.spent_time" /></td>
-                <td><input type="text" class="form-control duration"
+                <td class="remove-padding"><input type="text" class="form-control duration"
                            duration-picker name="timelogged"
                            ng-model="reportdetail.logged_time"/></td>
                 <td><input type="text" class="form-control duration" name="remarks" ng-model="reportdetail.remarks"/></td>
-                <td class="hidden-print">
+                <td class="hidden-print hideElements">
                     <button type="button" class="btn btn-default btn-info"
                             ng-show="report.reportdetails.length - 1 == $index" ng-click="add($index)">
                         <span class="glyphicon glyphicon-plus"></span>
@@ -97,14 +68,57 @@
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn hidden-print btn-default btn-info" ng-click="action('save')">Save</button>
-        <button type="button" class="btn hidden-print btn-default btn-danger" ng-click="action('delete')">Delete</button>
-        <button type="button" class="btn hidden-print btn-default btn-info" ng-click="action('email')">Email</button>
-        <button type="button" class="btn hidden-print btn-default btn-info" ng-click="preview()">Preview</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="action('save')">Save</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-danger" ng-click="action('delete')">Delete</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="email(this.report.date)">Email</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="preview(this.report.date)">Preview</button>
     </form>
+    <div id="imagecontainer">
+        <div class="form-inline" id="form">
+            <div class="visible-print hidden-lg hidden-md hidden-sm hidden-xs top-form">
+                <label class="less-left-padding">Login</label>
+                <label class="no-left-padding">Date</label>
+                <label>Logout</label>
+            </div>
+            <div class="form-group top-form">
+                <input type="text" format="HH:mm a" moment-picker="report.login" class="form-control input-block"
+                       name="logintime" ng-model="login" placeholder="Login time"/>
+                <input type="text" format="MMM Do YYYY" today="true" moment-picker="currentdate" id="currentdate"
+                       class="form-control print-margin input-block" name="date"
+                       ng-model="currentdate" title="Date of report"
+                       change="report.onChange()" ng-model-options="{ updateOn: 'blur' }"/>
+                <input type="text" format="HH:mm a" moment-picker="report.logout" class="form-control input-block"
+                       name="logout" ng-model="logout" placeholder="Logout time"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="visible-print hidden-lg hidden-md hidden-sm hidden-xs vertical-offset-print"></div>
+            <table class="table table-striped table-hover">
+                <thead class="table-head">
+                <th class="col-xs-1">#</th>
+                <th class="col-xs-2">Tickets/Tasks</th>
+                <th class="col-xs-2">Time spent</th>
+                <th class="col-xs-2">Time logged</th>
+                <th class="col-xs-5">Remarks</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="reportdetail in report.reportdetails track by $index">
+                    <td>{{$index+1}}</td>
+                    <td><input type="text" class="form-control" name="tickets" ng-model="reportdetail.tickets"/></td>
+                    <td><input type="text" class="form-control duration"
+                               duration-picker name="timespent"
+                               ng-model="reportdetail.spent_time" /></td>
+                    <td class="remove-padding"><input type="text" class="form-control duration"
+                                                      duration-picker name="timelogged"
+                                                      ng-model="reportdetail.logged_time"/></td>
+                    <td><div contenteditable class="form-control duration contenteditable" name="remarks" ng-model="reportdetail.remarks"></div></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <br/>
-<footer class="footer">
+<footer class="footer hidden-print hideElements">
     <div class="container-fluid footer-div">
         <div>&copy; 2017</div>
         <div>By <a href="http://faizanakram.me">Faizan Akram!</a></div>
@@ -115,7 +129,10 @@
 <script src="assets/js/moment.min.js"></script>
 <script src="assets/js/angular.min.js"></script>
 <script src="assets/js/angular-moment-picker.min.js"></script>
+<script src="assets/js/angular.contentEditable.js"></script>
 <script src="assets/js/scripts.js"></script>
+<script src="assets/js/html2canvas.js"></script>
+<script src="assets/js/stdout.js"></script>
 </body>
 </html>
 
