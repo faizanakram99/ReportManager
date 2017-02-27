@@ -2,3 +2,5 @@
 app/vendor/
 assets/css/.sass-cache/
 
+# email parameters file
+app/parameters.php
