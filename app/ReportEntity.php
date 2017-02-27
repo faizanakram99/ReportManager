@@ -16,9 +16,7 @@ class ReportEntity
     public function __construct($date = null)
     {
         $this->conn = new mysqli(self::SERVER, self::USERNAME, self::PASSWORD,self::DATABASE);
-        if ($this->conn->connect_error) {
-            die('Connect Error ('.$this->conn->connect_errno.') '.$this->conn->connect_error);
-        }
+        if ($this->conn->connect_error) die('Connect Error ('.$this->conn->connect_errno.') '.$this->conn->connect_error);        
         $result = $this->conn->query("SELECT report.*,
                                 (SELECT GROUP_CONCAT(id SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as reportdetail_id, 
                                 (SELECT GROUP_CONCAT(tickets SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as tickets,
@@ -51,14 +49,14 @@ class ReportEntity
             $reportid = $this->conn->insert_id;
 
             foreach($data->reportdetails as $reportdetail){
-                $this->conn->query("INSERT INTO reportdetails (report_id, tickets, spent_time, logged_time, remarks)
+                $result = $this->conn->query("INSERT INTO reportdetails (report_id, tickets, spent_time, logged_time, remarks)
                                     VALUES('$reportid', '$reportdetail->tickets', '$reportdetail->spent_time', 
                                     '$reportdetail->logged_time', '$reportdetail->remarks')");
             }
-            echo "Saved successfully";
+            if($result) echo "Saved successfully!";
         }
         else{
-            $this->conn->query("UPDATE report SET login = '$data->login', logout = '$data->logout'
+            $result = $this->conn->query("UPDATE report SET login = '$data->login', logout = '$data->logout'
                                 WHERE date = '$data->date'");
 
             foreach($data->reportdetails as $reportdetail){
@@ -76,19 +74,19 @@ class ReportEntity
                                     '$reportdetail->logged_time', '$reportdetail->remarks')");
                 }                
             }
-            echo "Updated successfully";
+            if($result) echo "Updated successfully!";
         }
     }
 
     public function deleteReport($date, $reportdetail_id = null){
         if($this->report){
             if($reportdetail_id) {
-                $this->conn->query("DELETE FROM reportdetails where id ='".$reportdetail_id."'");
-                echo "Deleted report line successfully!";
+                $result = $this->conn->query("DELETE FROM reportdetails where id ='".$reportdetail_id."'");
+                if($result) echo "Deleted successfully!";
             }
             else{
-                $this->conn->query("DELETE FROM report where date ='".$date."'");
-                echo "Deleted report successfully!";
+                $result = $this->conn->query("DELETE FROM report where date ='".$date."'");
+                if($result) echo "Deleted successfully!";
             }
         }
     }

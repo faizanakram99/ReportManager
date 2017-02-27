@@ -35,39 +35,26 @@ class ReportController
                 $report['reportdetails'][$i]['logged_time'] = $logged_time[$i];
                 $report['reportdetails'][$i]['remarks'] = $remarks[$i];
             }
-
             header("Content-type: application/json");
-            echo(json_encode($report));
-           
+            echo(json_encode($report));           
         }
     }
-
 
     public function updateAction($date = null){
         $reportEntity = new ReportEntity($date);
         $reportEntity->setReport($this->data);
     }
 
-
     public function deleteAction($date= null){
         $reportEntity = new ReportEntity($date);
         $reportEntity->deleteReport($date, $this->data);
     }
 
-
     public function emailAction($rawdata,$date){
         $img = str_replace('data:image/png;base64,', '', $rawdata);
         $img = str_replace(' ', '+', $img);
-        $data = base64_decode($img);
-        //$file = uniqid() . '.png';
-
+        $data = base64_decode($img);       
         $email = new Email();
-        $email->emailAction($data,$date);
-
-        header("Content-type:image/png");
-        echo $data;
-//        $success = file_put_contents($file, $data);
-//        print $file;
-        
+        $email->emailAction($data,$date);        
     }
 }

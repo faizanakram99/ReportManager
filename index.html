@@ -24,13 +24,13 @@
             <label>Logout</label>
         </div>
         <div class="form-group top-form">
-            <input type="text" format="HH:mm a" moment-picker="report.login" class="form-control input-block"
+            <input type="text" format="hh:mm a" moment-picker="report.login" class="form-control input-block"
                    name="logintime" ng-model="login" placeholder="Login time"/>
-            <input type="text" format="MMM Do YYYY" today="true" moment-picker="currentdate"
+            <input type="text" format="MMM Do YYYY" today="true" moment-picker="currentdate" id="currentdate"
                    class="form-control print-margin input-block" name="date"
                    ng-model="currentdate" title="Date of report"
                    change="report.onChange()" ng-model-options="{ updateOn: 'blur' }"/>
-            <input type="text" format="HH:mm a" moment-picker="report.logout" class="form-control input-block"
+            <input type="text" format="hh:mm a" moment-picker="report.logout" class="form-control input-block"
                    name="logout" ng-model="logout" placeholder="Logout time"/>
         </div>
         <div class="clearfix"></div>
@@ -70,8 +70,7 @@
         </table>
         <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="action('save')">Save</button>
         <button type="button" class="btn hidden-print hideElements btn-default btn-danger" ng-click="action('delete')">Delete</button>
-        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="email()">Email</button>
-        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="preview()">Preview</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="email()">Email</button>        
     </form>
     <div id="imagecontainer">
         <div class="form-inline" id="form">
@@ -81,13 +80,13 @@
                 <label>Logout</label>
             </div>
             <div class="form-group top-form">
-                <input type="text" format="HH:mm a" moment-picker="report.login" class="form-control input-block"
+                <input type="text" format="hh:mm a" moment-picker="report.login" class="form-control input-block"
                        name="logintime" ng-model="login" placeholder="Login time"/>
-                <input type="text" format="MMM Do YYYY" today="true" moment-picker="currentdate" id="currentdate"
+                <input type="text" format="MMM Do YYYY" today="true" moment-picker="currentdate"
                        class="form-control print-margin input-block" name="date"
                        ng-model="currentdate" title="Date of report"
                        change="report.onChange()" ng-model-options="{ updateOn: 'blur' }"/>
-                <input type="text" format="HH:mm a" moment-picker="report.logout" class="form-control input-block"
+                <input type="text" format="hh:mm a" moment-picker="report.logout" class="form-control input-block"
                        name="logout" ng-model="logout" placeholder="Logout time"/>
             </div>
             <div class="clearfix"></div>
@@ -127,12 +126,11 @@
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/duration-picker.js"></script>
 <script src="assets/js/moment.min.js"></script>
+<script src="assets/js/html2canvas.js"></script>
 <script src="assets/js/angular.min.js"></script>
 <script src="assets/js/angular-moment-picker.min.js"></script>
 <script src="assets/js/angular.contentEditable.js"></script>
 <script src="assets/js/scripts.js"></script>
-<script src="assets/js/html2canvas.js"></script>
-<script src="assets/js/stdout.js"></script>
 </body>
 </html>
 

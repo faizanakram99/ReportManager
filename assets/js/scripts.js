@@ -77,12 +77,39 @@ angular.module("reportsApp", ['moment-picker','myDirectives'])
                 }
             });            
         };
-
-        $scope.preview = function(){
-            createImageFromHTML('preview');
-        }
-
+                
         $scope.email = function(){
-            createImageFromHTML('email');
+            var div = document.querySelector('#imagecontainer');
+            var selecteddate = document.querySelector("#currentdate").value;
+            var canvas = document.createElement('canvas');
+
+            div.style.display = "block";
+
+            var scaleBy = 5;
+            var w = 1000;
+            var h = 1000;
+            canvas.width = w * scaleBy;
+            canvas.height = h * scaleBy;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            var context = canvas.getContext('2d');
+            context.scale(scaleBy, scaleBy);
+
+            html2canvas(div, {
+                canvas:canvas,
+                onrendered: function (canvas) {
+                    div.style.display = "none";           
+                    var canvasData = canvas.toDataURL("image/png");           
+                    
+                    jQuery.ajax({
+                        url: 'app/requestHandler.php?action=email&date='+selecteddate,
+                        type: 'POST',
+                        data: {imgData: canvasData},
+                        contentType:'application/x-www-form-urlencoded'                  
+                    }).done(function(response){
+                        alert(response);
+                    });
+                }
+            });
         }
     });

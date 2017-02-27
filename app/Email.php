@@ -1,6 +1,7 @@
 <?php
 
 require_once 'vendor/autoload.php';
+require_once 'parameters.php';
 
 
 /**
@@ -18,16 +19,18 @@ class Email extends Swift_SmtpTransport
 
     public function emailAction($data, $subject)
     {
+        global $configuration;
         $transport = self::newInstance('smtp.zoho.com',465,'ssl')
-            ->setUsername('your_username')
-            ->setPassword('yourpassword');
+            ->setUsername($configuration['email']['username'])
+            ->setPassword($configuration['email']['password']);
 
         $mailer = Swift_Mailer::newInstance($transport);
-       // $attachment = Swift_Attachment::newInstance($data,'DailyReport.png','image/png')->setDisposition('inline');
 
-        $message = Swift_Message::newInstance("Daily Report".$subject)
-            ->setFrom(['dummy@dummy.com' => 'dummy@dummy.com'])
-            ->setTo(['dummy@dummy.com' => 'dummy@dummy.com']);
+        $message = Swift_Message::newInstance("Daily Report - ".$subject)
+            ->setFrom($configuration['email']['from'])
+            ->setTo($configuration['email']['to'])
+            ->setCc($configuration['email']['cc'])
+            ->setBcc($configuration['email']['bcc']);
 
         $cid = $message->embed(Swift_Image::newInstance($data, 'report.png', 'image/png'));
 
@@ -41,8 +44,8 @@ class Email extends Swift_SmtpTransport
             'text/html' // Mark the content-type as HTML
         );
 
-
         $result = $mailer->send($message);
+        if ($result) echo "Email sent successfully";        
     }
 
 }
