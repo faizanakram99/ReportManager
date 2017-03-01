@@ -17,7 +17,7 @@
     </div>
 </header>
 <div class="container-fluid" ng-controller="mainController">
-    <form class="form-inline" id="form">
+    <form class="form-inline" id="form" name="form" novalidate>
         <div class="visible-print hidden-lg hidden-md hidden-sm hidden-xs top-form">
             <label>Login</label>
             <label class="print-margin">Date</label>
@@ -25,13 +25,12 @@
         </div>
         <div class="form-group top-form">
             <input type="text" format="hh:mm a" moment-picker="report.login" class="form-control input-block"
-                   name="logintime" ng-model="login" placeholder="Login time"/>
+                   name="logintime" ng-model="login" placeholder="Login time" ng-required="true" />
             <input type="text" format="MMM Do YYYY" today="true" moment-picker="currentdate" id="currentdate"
-                   class="form-control print-margin input-block" name="date"
-                   ng-model="currentdate" title="Date of report"
-                   change="report.onChange()" ng-model-options="{ updateOn: 'blur' }"/>
+                   class="form-control print-margin input-block" name="date" ng-model="currentdate" title="Date of report"
+                   change="report.onChange()" ng-model-options="{ updateOn: 'blur' }" ng-required="true"/>
             <input type="text" format="hh:mm a" moment-picker="report.logout" class="form-control input-block"
-                   name="logout" ng-model="logout" placeholder="Logout time"/>
+                   name="logout" ng-model="logout" placeholder="Logout time" />
         </div>
         <div class="clearfix"></div>
         <div class="visible-print hidden-lg hidden-md hidden-sm hidden-xs vertical-offset-print"></div>
@@ -47,20 +46,20 @@
             <tbody>
             <tr ng-repeat="reportdetail in report.reportdetails track by $index">
                 <td>{{$index+1}}</td>
-                <td><input type="text" class="form-control" name="tickets" ng-model="reportdetail.tickets"/></td>
+                <td><input type="text" class="form-control" name="tickets" ng-model="reportdetail.tickets" ng-required="true"/></td>
                 <td>
-                    <input type="text" name="timespent" ng-model="reportdetail.spent_time" class="form-control duration"
+                    <input type="text" name="timespent" ng-model="reportdetail.spent_time" class="form-control duration" ng-required="true"
                            duration-picker = "{ 'hours': {'label': ':', 'min': 0, 'max': 24, 'placeholder': 'HH' },
                                                 'minutes' : {'label': '', 'min': 0, 'max': 59, 'placeholder': 'MM' },
                                                 'hourField' : '#duration-hours', 'minuteField' : '#duration-minutes' }" />
                 </td>
                 <td class="remove-padding">
-                    <input type="text" class="form-control duration" name="timelogged" ng-model="reportdetail.logged_time"
+                    <input type="text" class="form-control duration" name="timelogged" ng-model="reportdetail.logged_time" ng-required="true"
                            duration-picker = "{ 'hours': {'label': ':', 'min': 0, 'max': 24, 'placeholder': 'HH' },
                                                 'minutes' : {'label': '', 'min': 0, 'max': 59, 'placeholder': 'MM' },
                                                 'hourField' : '#duration-hours', 'minuteField' : '#duration-minutes' }" />
                 </td>
-                <td><input type="text" class="form-control duration" name="remarks" ng-model="reportdetail.remarks"/></td>
+                <td><input type="text" class="form-control duration" name="remarks" ng-model="reportdetail.remarks" ng-required="true"/></td>
                 <td class="hidden-print hideElements">
                     <button type="button" class="btn btn-default btn-info"
                             ng-show="report.reportdetails.length - 1 == $index" ng-click="add($index)">
@@ -74,9 +73,9 @@
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="action('save')">Save</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-disabled="form.$invalid" ng-click="action('save')">Save</button>
         <button type="button" class="btn hidden-print hideElements btn-default btn-danger" ng-click="action('delete')">Delete</button>
-        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="email()">Email</button>
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-show="showemail" ng-disabled="form.$invalid" ng-click="email()">Email</button>
     </form>
     <div id="imagecontainer">
         <div class="form-inline" id="form">

@@ -33,6 +33,8 @@ form.form-inline {
     min-width: 100%; }
     form.form-inline input.durationpicker-duration {
       min-width: initial; }
+    form.form-inline input.ng-touched.ng-invalid.ng-invalid-required {
+      border: 1px solid red; }
 
 @media print {
   div.top-form input, div.top-form label {

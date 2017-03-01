@@ -1,4 +1,4 @@
-angular.module("reportsApp", ['moment-picker','myDirectives'])
+angular.module("reportsApp", ['moment-picker'])
     .directive("durationPicker", function () {
         return {
             restrict: 'A',
@@ -32,13 +32,23 @@ angular.module("reportsApp", ['moment-picker','myDirectives'])
         $scope.report = {reportdetails : [{}] };
         $scope.currentdate = moment();
 
+        $scope.renderEmailVisibility = function(){
+            $scope.report.reportdetails.forEach(function (reportdetail, index) {
+                $scope.showemail = false;
+                if(!reportdetail.reportdetail_id) return;
+                $scope.showemail = true;
+            });
+        };
+
         $scope.report.onChange = function () {
             $scope.report.date = moment($scope.currentdate).format("YYYY-MM-DD");
             $http.get("app/requestHandler.php?action=edit&date=" + $scope.report.date)
                 .then(function (response) {
+                    if(!response.data) angular.element(".durationpicker-duration").val('');
                     $scope.report.login = response.data.login;
                     $scope.report.logout = response.data.logout;
                     $scope.report.reportdetails = response.data.reportdetails || [{}];
+                    $scope.renderEmailVisibility()
                 });
         };
 
@@ -47,14 +57,13 @@ angular.module("reportsApp", ['moment-picker','myDirectives'])
         $scope.add = function (index) {
             $scope.report.reportdetails.push([index].reportdetail);
             $scope.report.reportdetails[index + 1] = {};
+            $scope.renderEmailVisibility();
         };
 
         $scope.remove = function (index) {
             var reportdetail_id = this.reportdetail.reportdetail_id || false;
             reportdetail_id ? $scope.action('delete', reportdetail_id) : $scope.report.reportdetails.splice(index, 1);
-            $timeout(function(){
-                $scope.returnval ? $scope.report.reportdetails.splice(index, 1) : '' ;
-            }, 100);
+            $scope.renderEmailVisibility();
         };
 
         $scope.action = function (actiontype, reportdetail_id) {
@@ -73,11 +82,9 @@ angular.module("reportsApp", ['moment-picker','myDirectives'])
                 if (response.status == 200) {
                     $scope.returnval = true;
                     alert(response.data);
-                    if(actiontype == "delete" && !reportdetail_id){
-                        $scope.report = { reportdetails: [{}] }; 
-                        angular.element(".durationpicker-duration").val('');
-                    }
                 }
+                $scope.report.onChange();
+                $scope.renderEmailVisibility();
             });            
         };
                 

@@ -46,6 +46,9 @@ form.form-inline {
     &.durationpicker-duration {
       min-width: initial;
     }
+    &.ng-touched.ng-invalid.ng-invalid-required{
+      border: 1px solid red;
+    }
   }
 }
 
