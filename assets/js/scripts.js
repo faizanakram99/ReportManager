@@ -5,9 +5,10 @@ angular.module("reportsApp", ['moment-picker','myDirectives'])
             require: 'ngModel',
             link: function (scope, elm, attrs, ngModel) {
                 var elem = angular.element(elm);
+                attr = scope.$eval(attrs.durationPicker);
                 elem.durationPicker({
-                    hours: {label: ':', min: 0, max: 24, placeholder: 'HH'},
-                    minutes: {label: '', min: 0, max: 59, placeholder: 'MM'},
+                    hours: attr.hours,
+                    minutes: attr.minutes,
                     classname: 'form-control ' + attrs.name,
                     type : 'text'
                 });
@@ -18,8 +19,10 @@ angular.module("reportsApp", ['moment-picker','myDirectives'])
                     scope.$apply();
                 });
                 scope.$watch(attrs.ngModel, function (newval) {
-                    if(newval && !elem.prev().find("#duration-hours").val()) elem.prev().find("#duration-hours").val(newval.split("::")[0]);
-                    if(newval && !elem.prev().find("#duration-minutes").val()) elem.prev().find("#duration-minutes").val(newval.split("::")[1]);
+                    if(newval) {
+                        elem.prev().find(attr.hourField).val(newval.split("::")[0]);
+                        elem.prev().find(attr.minuteField).val(newval.split("::")[1]);
+                    }
                 })
 
             }

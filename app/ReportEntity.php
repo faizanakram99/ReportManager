@@ -15,15 +15,22 @@ class ReportEntity
      */
     public function __construct($date = null)
     {
+        mysqli_report(MYSQLI_REPORT_ALL);
         $this->conn = new mysqli(self::SERVER, self::USERNAME, self::PASSWORD,self::DATABASE);
-        if ($this->conn->connect_error) die('Connect Error ('.$this->conn->connect_errno.') '.$this->conn->connect_error);        
-        $result = $this->conn->query("SELECT report.*,
+        if ($this->conn->connect_error) die('Connect Error ('.$this->conn->connect_errno.') '.$this->conn->connect_error);
+
+        if(!($stmt = $this->conn->prepare("SELECT report.*,
                                 (SELECT GROUP_CONCAT(id SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as reportdetail_id, 
                                 (SELECT GROUP_CONCAT(tickets SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as tickets,
                                 (SELECT GROUP_CONCAT(spent_time SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as spent_time,
                                 (SELECT GROUP_CONCAT(logged_time SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as logged_time,
                                 (SELECT GROUP_CONCAT(remarks SEPARATOR '|#|') FROM reportdetails where report_id = report.id) as remarks
-                                FROM report WHERE report.date ='".$date."'");
+                                FROM report WHERE report.date = ?"))){
+            echo "Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error;
+        }
+        if(!$stmt->bind_param('s',$date)) echo "Binding parameters failed: (".$stmt->errno.") ". $stmt->error;
+        if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        $result = $stmt->get_result();
         if($result->num_rows) $this->report = $result->fetch_assoc();
     }
 
@@ -33,7 +40,12 @@ class ReportEntity
             return $this->report[$name];
         }
         elseif ($name == "reportdetails"){
-            $result = $this->conn->query("SELECT * FROM reportdetails WHERE report_id ='".$this->id."'");
+            if(!($stmt = $this->conn->prepare("SELECT * FROM reportdetails WHERE report_id = ?"))){
+                echo "Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error;
+            }
+            if(!$stmt->bind_param('i',$this->id)) echo "Binding parameters failed: (".$stmt->errno.") ".$stmt->error;
+            if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+            $result = $stmt->get_result();
             while($row = $result->fetch_assoc()) $rows[] = $row;
             return ($rows);
         }
@@ -44,49 +56,89 @@ class ReportEntity
 
     public function setReport($data){
         if (!$this->report){
-            $this->conn->query("INSERT INTO report (date, login, logout)
-                                VALUES('$data->date', '$data->login', '$data->logout')");
-            $reportid = $this->conn->insert_id;
+            if(!($stmt = $this->conn->prepare("INSERT INTO report (date, login, logout)
+                                VALUES(?,?,?)"))){
+                echo "Prepare failed: (".$this->conn->errno.") ".$this->conn->error;
+            }
+            if(!$stmt->bind_param('sss',$data->date, $data->login, $data->logout)){
+                echo "Binding parameters failed: (".$stmt->errno.") ".$stmt->error;
+            }
+            if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+            $reportid = $stmt->insert_id;
+            $stmt->close();
 
             foreach($data->reportdetails as $reportdetail){
-                $result = $this->conn->query("INSERT INTO reportdetails (report_id, tickets, spent_time, logged_time, remarks)
-                                    VALUES('$reportid', '$reportdetail->tickets', '$reportdetail->spent_time', 
-                                    '$reportdetail->logged_time', '$reportdetail->remarks')");
+                if(!($stmt = $this->conn->prepare("INSERT INTO reportdetails (report_id, tickets, spent_time, logged_time, remarks)
+                                    VALUES(?,?,?,?,?)"))){
+                    echo "Prepare failed: (".$this->conn->errno.") ".$this->conn->error;
+                }
+                if(!$stmt->bind_param('issss',$reportid,$reportdetail->tickets,
+                                              $reportdetail->spent_time,$reportdetail->logged_time, $reportdetail->remarks)){
+                    echo "Binding parameters failed: (".$stmt->errno.") ".$stmt->error;
+                }
+                if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
             }
-            if($result) echo "Saved successfully!";
+            echo "Saved successfully!";
         }
         else{
-            $result = $this->conn->query("UPDATE report SET login = '$data->login', logout = '$data->logout'
-                                WHERE date = '$data->date'");
+            if(!($stmt = $this->conn->prepare("UPDATE report SET login = ? , logout = ? WHERE date = ? "))){
+                echo "Prepare failed: (".$this->conn->errno.") ".$this->conn->error;
+            }
+            if(!$stmt->bind_param('sss', $data->login, $data->logout, $data->date)){
+                echo "Binding parameters failed: (".$stmt->errno.") ".$stmt->error;
+            }
+            if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+            $stmt->close();
 
             foreach($data->reportdetails as $reportdetail){
                 if($reportdetail->reportdetail_id != null || $reportdetail->reportdetail_id != ''){
-                    $this->conn->query("UPDATE reportdetails 
-                                    SET tickets = '$reportdetail->tickets', 
-                                    spent_time = '$reportdetail->spent_time',
-                                    logged_time = '$reportdetail->logged_time',
-                                    remarks = '$reportdetail->remarks'
-                                    WHERE id = '$reportdetail->reportdetail_id'");
+                    if(!($stmt = $this->conn->prepare("UPDATE reportdetails SET tickets = ?, 
+                                                       spent_time = ?, logged_time = ?, remarks = ? WHERE id = ?"))){
+                        echo "Prepare failed: (".$this->conn->errno.") ".$this->conn->error;
+                    }
+                    if(!$stmt->bind_param('ssssi',$reportdetail->tickets, $reportdetail->spent_time,
+                                                  $reportdetail->logged_time, $reportdetail->remarks, $reportdetail->reportdetail_id)){
+                        echo "Binding parameters failed: (".$stmt->errno.") ".$stmt->error;
+                    }
+                    if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+                    $stmt->close();
                 }
                 else{
-                    $this->conn->query("INSERT INTO reportdetails (report_id, tickets, spent_time, logged_time, remarks)
-                                    VALUES('$this->id', '$reportdetail->tickets', '$reportdetail->spent_time', 
-                                    '$reportdetail->logged_time', '$reportdetail->remarks')");
+                    if(!($stmt = $this->conn->prepare("INSERT INTO reportdetails (report_id, tickets, spent_time, logged_time, remarks)
+                                                  VALUES(?,?,?,?,?)"))){
+                        echo "Prepare failed: (".$this->conn->errno.") ".$this->conn->error;
+                    }
+                    if(!$stmt->bind_param('issss',$this->id,$reportdetail->tickets, $reportdetail->spent_time,
+                                                  $reportdetail->logged_time, $reportdetail->remarks)){
+                        echo "Binding parameters failed: (".$stmt->errno.") ".$stmt->error;
+                    }
+                    if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+                    $stmt->close();
                 }                
             }
-            if($result) echo "Updated successfully!";
+            echo "Updated successfully!";
         }
     }
 
     public function deleteReport($date, $reportdetail_id = null){
         if($this->report){
             if($reportdetail_id) {
-                $result = $this->conn->query("DELETE FROM reportdetails where id ='".$reportdetail_id."'");
-                if($result) echo "Deleted successfully!";
+                if(!($stmt = $this->conn->prepare("DELETE FROM reportdetails where id = ?"))){
+                    echo "Prepare failed: (".$this->conn->errno.") ".$this->conn->error;
+                }
+                if(!$stmt->bind_param('i',$reportdetail_id )) echo "Binding parameters failed: (".$stmt->errno.") ".$stmt->error;
+                if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+                $stmt->close();
+                echo "Deleted successfully!";
             }
             else{
-                $result = $this->conn->query("DELETE FROM report where date ='".$date."'");
-                if($result) echo "Deleted successfully!";
+                if(!($stmt = $this->conn->prepare("DELETE FROM report where date = ?"))) {
+                    echo "Prepare failed: (".$this->conn->errno.") ".$this->conn->error;
+                }
+                if(!$stmt->bind_param('s',$date )) echo "Binding parameters failed: (".$stmt->errno.") ".$stmt->error;
+                if(!$stmt->execute()) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+                $stmt->close();
+                echo "Deleted successfully!";
             }
         }
     }

@@ -48,12 +48,18 @@
             <tr ng-repeat="reportdetail in report.reportdetails track by $index">
                 <td>{{$index+1}}</td>
                 <td><input type="text" class="form-control" name="tickets" ng-model="reportdetail.tickets"/></td>
-                <td><input type="text" class="form-control duration"
-                           duration-picker name="timespent"
-                           ng-model="reportdetail.spent_time" /></td>
-                <td class="remove-padding"><input type="text" class="form-control duration"
-                           duration-picker name="timelogged"
-                           ng-model="reportdetail.logged_time"/></td>
+                <td>
+                    <input type="text" name="timespent" ng-model="reportdetail.spent_time" class="form-control duration"
+                           duration-picker = "{ 'hours': {'label': ':', 'min': 0, 'max': 24, 'placeholder': 'HH' },
+                                                'minutes' : {'label': '', 'min': 0, 'max': 59, 'placeholder': 'MM' },
+                                                'hourField' : '#duration-hours', 'minuteField' : '#duration-minutes' }" />
+                </td>
+                <td class="remove-padding">
+                    <input type="text" class="form-control duration" name="timelogged" ng-model="reportdetail.logged_time"
+                           duration-picker = "{ 'hours': {'label': ':', 'min': 0, 'max': 24, 'placeholder': 'HH' },
+                                                'minutes' : {'label': '', 'min': 0, 'max': 59, 'placeholder': 'MM' },
+                                                'hourField' : '#duration-hours', 'minuteField' : '#duration-minutes' }" />
+                </td>
                 <td><input type="text" class="form-control duration" name="remarks" ng-model="reportdetail.remarks"/></td>
                 <td class="hidden-print hideElements">
                     <button type="button" class="btn btn-default btn-info"
@@ -70,7 +76,7 @@
         </table>
         <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="action('save')">Save</button>
         <button type="button" class="btn hidden-print hideElements btn-default btn-danger" ng-click="action('delete')">Delete</button>
-        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="email()">Email</button>        
+        <button type="button" class="btn hidden-print hideElements btn-default btn-info" ng-click="email()">Email</button>
     </form>
     <div id="imagecontainer">
         <div class="form-inline" id="form">
@@ -103,12 +109,15 @@
                 <tr ng-repeat="reportdetail in report.reportdetails track by $index">
                     <td>{{$index+1}}</td>
                     <td><div contenteditable class="form-control contenteditable less-padding" name="tickets" ng-model="reportdetail.tickets"/></td>
-                    <td><input type="text" class="form-control duration"
-                               duration-picker name="timespent"
-                               ng-model="reportdetail.spent_time" /></td>
-                    <td class="remove-padding"><input type="text" class="form-control duration"
-                                                      duration-picker name="timelogged"
-                                                      ng-model="reportdetail.logged_time"/></td>
+                    <td><input type="text" class="form-control duration" name="timespent" ng-model="reportdetail.spent_time"
+                               duration-picker = "{ 'hours': {'label': ':', 'min': 0, 'max': 24, 'placeholder': 'HH' },
+                                                    'minutes': {'label': '', 'min': 0, 'max': 59, 'placeholder': 'MM' },
+                                                    'hourField' : '#duration-hours', 'minuteField' : '#duration-minutes' }" /></td>
+                    <td class="remove-padding">
+                        <input type="text" class="form-control duration" name="timelogged" ng-model="reportdetail.logged_time"
+                               duration-picker = "{ 'hours': {'label': ':', 'min': 0, 'max': 24, 'placeholder': 'HH' },
+                                                    'minutes' : {'label': '', 'min': 0, 'max': 59, 'placeholder': 'MM' },
+                                                    'hourField' : '#duration-hours', 'minuteField' : '#duration-minutes' }" /></td>
                     <td><div contenteditable class="form-control duration contenteditable" name="remarks" ng-model="reportdetail.remarks"></div></td>
                 </tr>
                 </tbody>
@@ -119,7 +128,7 @@
 <br/>
 <footer class="footer hidden-print hideElements">
     <div class="container-fluid footer-div">
-        <div>&copy; 2017</div>
+        <div>Report Manager &copy; 2017</div>
         <div>By <a href="http://faizanakram.me">Faizan Akram!</a></div>
     </div>
 </footer>
