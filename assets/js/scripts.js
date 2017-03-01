@@ -1,33 +1,4 @@
-angular.module("reportsApp", ['moment-picker'])
-    .directive("durationPicker", function () {
-        return {
-            restrict: 'A',
-            require: 'ngModel',
-            link: function (scope, elm, attrs, ngModel) {
-                var elem = angular.element(elm);
-                attr = scope.$eval(attrs.durationPicker);
-                elem.durationPicker({
-                    hours: attr.hours,
-                    minutes: attr.minutes,
-                    classname: 'form-control ' + attrs.name,
-                    type : 'text'
-                });
-                elem.prev().find('input').on("change", function () {
-                    elem.trigger("change");
-                });
-                elem.on("change", function (e) {
-                    scope.$apply();
-                });
-                scope.$watch(attrs.ngModel, function (newval) {
-                    if(newval) {
-                        elem.prev().find(attr.hourField).val(newval.split("::")[0]);
-                        elem.prev().find(attr.minuteField).val(newval.split("::")[1]);
-                    }
-                })
-
-            }
-        }
-    })
+angular.module("reportsApp", ['moment-picker','directivesModule'])
     .controller("mainController", function ($scope, $http, $timeout, $window) {
         $scope.report = {reportdetails : [{}] };
         $scope.currentdate = moment();
