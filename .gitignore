@@ -1,6 +1,6 @@
 .idea/
-app/vendor/
+/vendor/
 assets/css/.sass-cache/
 
 # email parameters file
-app/parameters.php
+/src/Reports/Parameters.php

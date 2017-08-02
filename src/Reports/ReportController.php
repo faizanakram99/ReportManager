@@ -1,6 +1,6 @@
 <?php
-require_once "ReportEntity.php";
-require_once "Email.php";
+
+namespace Reports;
 
 class ReportController
 {
@@ -50,11 +50,8 @@ class ReportController
         $reportEntity->deleteReport($date, $this->data);
     }
 
-    public function emailAction($rawdata,$date){
-        $img = str_replace('data:image/png;base64,', '', $rawdata);
-        $img = str_replace(' ', '+', $img);
-        $data = base64_decode($img);       
+    public function emailAction($date){
         $email = new Email();
-        $email->emailAction($data,$date);        
+        $email->emailAction($this->data, $date);
     }
 }

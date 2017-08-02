@@ -1,5 +1,8 @@
 <?php
 
+namespace Reports;
+use mysqli;
+
 class ReportEntity
 {
     const SERVER = 'localhost';
@@ -15,7 +18,6 @@ class ReportEntity
      */
     public function __construct($date = null)
     {
-        mysqli_report(MYSQLI_REPORT_ALL);
         $this->conn = new mysqli(self::SERVER, self::USERNAME, self::PASSWORD,self::DATABASE);
         if ($this->conn->connect_error) die('Connect Error ('.$this->conn->connect_errno.') '.$this->conn->connect_error);
 

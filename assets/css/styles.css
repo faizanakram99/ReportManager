@@ -31,61 +31,13 @@ form.form-inline {
     background: #404040; }
   form.form-inline input {
     min-width: 100%; }
-    form.form-inline input.durationpicker-duration {
-      min-width: initial; }
+    form.form-inline input.time {
+      min-width: 80px;
+      width: 80px; }
     form.form-inline input.ng-touched.ng-invalid.ng-invalid-required {
       border: 1px solid red; }
 
-@media print {
-  div.top-form input, div.top-form label {
-    display: inline-block !important;
-    width: 32%;
-    float: left; }
-    div.top-form input.print-margin, div.top-form label.print-margin {
-      margin: auto 2%; }
-  div.top-form label {
-    padding-left: 10px; }
-
-  .vertical-offset-print {
-    height: 30px; } }
 #imagecontainer {
-  display: none;
-  max-width: 700px;
-  margin: 0 auto; }
-  #imagecontainer table.table-striped.table-hover thead {
-    color: #fefefe;
-    background: #404040; }
-  #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n+1) {
-    background: #efefef; }
-    #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n+1):hover {
-      background: #f9f9f9; }
-  #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n) {
-    background: #fbfbfb; }
-    #imagecontainer table.table-striped.table-hover tbody > tr:nth-child(2n):hover {
-      background: white; }
-  #imagecontainer div.contenteditable {
-    word-break: break-word;
-    max-width: 275px;
-    width: 100%;
-    height: auto;
-    padding-right: 35px; }
-    #imagecontainer div.contenteditable.less-padding {
-      padding-right: 15px; }
-  #imagecontainer input.form-control {
-    width: 100%; }
-  #imagecontainer div.top-form {
-    display: flex !important;
-    justify-content: space-between; }
-  #imagecontainer div.top-form input:nth-of-type(2) {
-    text-align: center !important; }
-  #imagecontainer div.top-form label {
-    padding-right: 140px;
-    padding-left: 25px; }
-    #imagecontainer div.top-form label.less-left-padding {
-      padding-left: 15px; }
-  #imagecontainer .vertical-offset-print {
-    height: 30px; }
-  #imagecontainer .visible-print {
-    display: block !important; }
+  display: none; }
 
 /*# sourceMappingURL=styles.css.map */

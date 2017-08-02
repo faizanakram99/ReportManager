@@ -1,9 +1,9 @@
 <?php
 
-require_once "ReportController.php";
+require_once "../../vendor/autoload.php";
 
 $data = file_get_contents("php://input");
-$reportController = new ReportController($data);
+$reportController = new Reports\ReportController($data);
 
 switch ($_GET['action']){
     case 'edit':
@@ -15,7 +15,7 @@ switch ($_GET['action']){
     break;
 
     case 'email':
-    $reportController->emailAction($_POST['imgData'],$_GET['date']);
+    $reportController->emailAction($_GET['date']);
     break;
 
     case 'delete':

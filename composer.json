@@ -1,8 +1,11 @@
 {
     "name": "ReportManager",
     "description": "A simple app for managing daily reports",
+    "autoload": {
+        "psr-0": {"": "src/" }
+    },
     "config": {
-        "vendor-dir": "app/vendor"
+        "vendor-dir": "vendor"
     },
     "require": {
         "swiftmailer/swiftmailer": "@stable"

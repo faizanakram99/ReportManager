@@ -43,8 +43,9 @@ form.form-inline {
   }
   input {
     min-width: 100%;
-    &.durationpicker-duration {
-      min-width: initial;
+    &.time{
+      min-width: 80px;
+      width: 80px;
     }
     &.ng-touched.ng-invalid.ng-invalid-required{
       border: 1px solid red;
@@ -52,81 +53,6 @@ form.form-inline {
   }
 }
 
-@media print {
-  div.top-form {
-    input, label {
-      display: inline-block !important;
-      width: 32%;
-      float: left;
-      &.print-margin {
-        margin: auto 2%;
-      }
-    }
-    label{
-      padding-left: 10px;
-    }
-  }
-  .vertical-offset-print{
-    height: 30px;
-  }
-}
-
 #imagecontainer{
   display: none;
-  max-width: 700px;
-  margin: 0 auto;
-  table.table-striped.table-hover{
-    thead{
-      color: #fefefe;
-      background: #404040;
-    }
-    tbody{
-      & > tr:nth-child(2n+1){
-        background: #efefef;
-        &:hover{
-          background: lighten(#efefef, 4);
-        }
-      }
-      & > tr:nth-child(2n){
-        background: #fbfbfb;
-        &:hover{
-          background: lighten(#fbfbfb, 3);
-        }
-      }
-    }
-  }
-  div.contenteditable{
-    word-break: break-word;
-    max-width: 275px;
-    width: 100%;
-    height: auto;
-    padding-right: 35px;
-    &.less-padding{
-      padding-right: 15px;
-    }
-  }
-  input.form-control{
-    width: 100%;
-  }
-  div.top-form {
-    display: flex !important;
-    justify-content:space-between;
-  };
-  div.top-form input:nth-of-type(2){
-    text-align:center !important;
-  };
-
-  div.top-form label {
-    padding-right: 140px;
-    padding-left: 25px;
-    &.less-left-padding{
-      padding-left: 15px;
-    }
-  };
-  .vertical-offset-print {
-    height: 30px;;
-  };
-  .visible-print{
-    display: block !important;;
-  };
 }
