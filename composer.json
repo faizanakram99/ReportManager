@@ -8,6 +8,14 @@
         "vendor-dir": "vendor"
     },
     "require": {
-        "swiftmailer/swiftmailer": "@stable"
+        "swiftmailer/swiftmailer": "@stable",
+        "doctrine/collections": "^1.4",
+        "doctrine/orm": "^2.5",
+        "symfony/yaml": "^3.4",
+        "symfony/http-foundation": "^3.4",
+        "sensio/framework-extra-bundle": "^5.1"
+    },
+    "scripts": {
+        "post-autoload-dump": "vendor/bin/doctrine orm:schema-tool:update --force --dump-sql"
     }
 }

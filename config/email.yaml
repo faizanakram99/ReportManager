@@ -1,0 +1,9 @@
+# Email parameters
+host: smtp.gmail.com
+port: 465
+security: ssl
+username: sender@something.com
+password: password
+sendto: receiver@example.com
+cc: cc@example.com
+bcc: cc@example
