@@ -1,7 +1,7 @@
 # ReportManager
 Report Manager in PHP and AngularJS
 
-A simple single page application with Front-end in AngularJS and back-end in PHP and MySQL.
+A simple SPA (Single Page Application) in AngularJS with REST API (using PHP ).
 
 Requirements
 -------------
@@ -11,10 +11,7 @@ Requirements
 
 Instructions
 ----------------
-- Create a database in MySQL named `reportmanager` (create database `reportmanager`)
-- Import `reportmanager.sql` to update schema 
-  - From root directory login to `mysql` in Command Prompt or Bash (usually `mysql -u root`)
-  - Import `reportmanager.sql` (`source reportmanager.sql`) 
-- Run `composer install`
-- Update `src/Reports/Parameters.php` with your email, password, etc
-- If your database has some root password, update `src/Reports/ReportEntity.php` accordingly.
+- Update `config/db.yaml` with database connection parameters (like `username`, `host`, `password`, etc)
+- Create a database with the same as value of `dbname` in `config/db.yml`
+- Run `composer install` (database schema shall update automatically as scripts for updating schema is included in `composer.json`)
+- Update `email` parameters in `config/email.yaml`

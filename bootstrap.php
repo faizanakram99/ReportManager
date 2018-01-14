@@ -3,16 +3,15 @@
  * Created by PhpStorm.
  * User: faizan
  * Date: 13/1/18
- * Time: 4:42 PM
+ * Time: 4:42 PM.
  */
-
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
-require_once "vendor/autoload.php";
+require_once 'vendor/autoload.php';
 
 $isDevMode = true;
 
@@ -31,5 +30,3 @@ try {
 $request = Request::createFromGlobals();
 
 $report = new Api\Report($em);
-
-

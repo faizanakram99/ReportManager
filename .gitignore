@@ -4,3 +4,6 @@ assets/css/.sass-cache/
 
 # email parameters file
 /src/Reports/Parameters.php
+
+# php-cs-fixer
+.php_cs.cache

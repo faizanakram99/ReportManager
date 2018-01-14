@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: faizan
  * Date: 13/1/18
- * Time: 6:45 PM
+ * Time: 6:45 PM.
  */
 
 namespace Api;
-
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
@@ -19,9 +18,8 @@ use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\Yaml\Yaml;
 
-
 /**
- * Class Report
+ * Class Report.
  */
 class Report
 {
@@ -30,6 +28,7 @@ class Report
 
     /**
      * Report constructor.
+     *
      * @param EntityManager $em
      */
     public function __construct(EntityManager $em)
@@ -39,6 +38,7 @@ class Report
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function get(Request $request): JsonResponse
@@ -46,11 +46,13 @@ class Report
         $date = \DateTime::createFromFormat('Y-m-d', str_replace('/', '', $request->getPathInfo()));
         /** @var \Entity\Report $report */
         $report = $this->em->getRepository('Entity\Report')->findOneBy(['date' => $date]);
-        return new JsonResponse($report ? $report->getAll() : ['reportdetails' => [new class{}]]);
+
+        return new JsonResponse($report ? $report->getAll() : ['reportdetails' => [new class() {}]]);
     }
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function save(Request $request): JsonResponse
@@ -84,11 +86,13 @@ class Report
         } catch (ORMException $e) {
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
+
         return new JsonResponse(['message' => 'Saved successfully!']);
     }
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function delete(Request $request): JsonResponse
@@ -103,11 +107,13 @@ class Report
         } catch (ORMException $e) {
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
+
         return new JsonResponse(['message' => 'Deleted successfully!']);
     }
 
     /**
      * @param $request
+     *
      * @return JsonResponse
      */
     public function email(Request $request): JsonResponse
@@ -133,7 +139,6 @@ class Report
         if (isset($parameters['bcc'])) {
             $message->setBcc($parameters['bcc']);
         }
-
 
         $heading = "<strong>Work hours : {$content['login']} - {$content['logout']}</strong>";
 
@@ -166,7 +171,9 @@ class Report
 
         $message->setBody($body, 'text/html');
         $result = $mailer->send($message);
-        if(!$result) return new JsonResponse(['error' => 'Mail failed!'], 500);
+        if (!$result) {
+            return new JsonResponse(['error' => 'Mail failed!'], 500);
+        }
 
         return new JsonResponse(['message' => 'Mail sent successfully!']);
     }

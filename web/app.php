@@ -3,12 +3,11 @@
  * Created by PhpStorm.
  * User: faizan
  * Date: 13/1/18
- * Time: 11:37 PM
+ * Time: 11:37 PM.
  */
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__.'/../bootstrap.php';
 
 $methods = [
     'POST' => function () use ($report, $request) {
