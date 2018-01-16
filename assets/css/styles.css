@@ -36,8 +36,4 @@ form.form-inline {
       width: 80px; }
     form.form-inline input.ng-touched.ng-invalid.ng-invalid-required {
       border: 1px solid red; }
-
-#imagecontainer {
-  display: none; }
-
 /*# sourceMappingURL=styles.css.map */

@@ -1,0 +1,33 @@
+<html>
+<body>
+<strong>Work hours : {{ content.login }} - {{ content.logout }}</strong>
+<div>
+    <table border='1' style='width: 600px; table-layout: fixed'>
+        <thead style="background: #3c3c3c; color: #fff;">
+        <tr>
+            <th style="padding: 6px; width: 25px;">#</th>
+            <th style="padding: 6px">Tickets/Tasks</th>
+            <th style="padding: 6px; width: 70px;">Time spent</th>
+            <th style="padding: 6px; width: 70px;">Time logged</th>
+            <th style="padding: 6px">Remarks</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reportdetail in content.reportdetails %}
+            <tr>
+                <td style='padding: 5px'>{{ loop.index }}</td>
+                <td style='padding: 5px'>
+                    <div style='word-wrap: break-word'>{{ reportdetail['tickets'] }}</div>
+                </td>
+                <td style='padding: 5px'>{{ reportdetail['spent_time'] }}</td>
+                <td style='padding: 5px'>{{ reportdetail['logged_time'] }}</td>
+                <td style='padding: 5px'>
+                    <div style='word-wrap: break-word'>{{ reportdetail['remarks'] }}</div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

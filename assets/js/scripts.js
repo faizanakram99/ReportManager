@@ -5,17 +5,17 @@ angular.module("reportsApp", ['ngResource', 'moment-picker'])
         $scope.refresh = true;
 
         const Report = $resource('/web/app.php/:date', {date: '@date'});
-        const getReport = () => Report.get({date: $scope.date}, (report) => $scope.report = report);
+        const getReport = () => Report.get({date: $scope.date});
 
-        $scope.$watch('currentdate', (newval) => {
-            $scope.date = moment(newval).format("YYYY-MM-DD");
-            $scope.dateText = moment(newval).format("MMM Do YYYY");
-            if($scope.refresh) getReport();
-        });
+        $scope.changeDate = () => {
+            $scope.date = moment($scope.currentdate).format("YYYY-MM-DD");
+            $scope.dateText = moment($scope.currentdate).format("MMM Do YYYY");
+            if($scope.refresh) $scope.report = getReport();
+        }
+
+        $scope.changeDate();
 
         $scope.toggleEmail = () => !($scope.report.reportdetails && $scope.report.reportdetails.find(x => x && !x.id));
-
-        $scope.$watch('report.login + report.logout', () => $scope.workhours = `${$scope.report.login} - ${$scope.report.logout}`);
 
         $scope.add = (index) => {
             $scope.report.reportdetails.push({});
@@ -29,14 +29,14 @@ angular.module("reportsApp", ['ngResource', 'moment-picker'])
 
         $scope.save = () => {
             Report.save({date: $scope.date}, JSON.stringify($scope.report), (response) => {
-                getReport();
+                $scope.report = getReport();
                 alert(response.message);
             }, (error) => console.log(error));
         };
 
         $scope.delete = () => {
             Report.delete({date: $scope.date}, (response) => {
-                getReport();
+                $scope.report = getReport();
                 alert(response.message);
             }, (error) => console.log(error));
         };

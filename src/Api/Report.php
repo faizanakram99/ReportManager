@@ -26,14 +26,19 @@ class Report
     /** @var EntityManager $em */
     private $em;
 
+    /** @var \Twig_Environment $twig */
+    private $twig;
+
     /**
      * Report constructor.
      *
      * @param EntityManager $em
+     * @param \Twig_Environment $twig
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, \Twig_Environment $twig)
     {
         $this->em = $em;
+        $this->twig = $twig;
     }
 
     /**
@@ -43,9 +48,7 @@ class Report
      */
     public function get(Request $request): JsonResponse
     {
-        $date = \DateTime::createFromFormat('Y-m-d', str_replace('/', '', $request->getPathInfo()));
-        /** @var \Entity\Report $report */
-        $report = $this->em->getRepository('Entity\Report')->findOneBy(['date' => $date]);
+        $report = $this->getReport($this->getDate($request));
 
         return new JsonResponse($report ? $report->getAll() : ['reportdetails' => [new class() {}]]);
     }
@@ -58,9 +61,9 @@ class Report
     public function save(Request $request): JsonResponse
     {
         $report = json_decode($request->getContent(), true);
-        $date = \DateTime::createFromFormat('Y-m-d', str_replace('/', '', $request->getPathInfo()));
+        $date = $this->getDate($request);
 
-        $reportEntity = $this->em->getRepository('Entity\Report')->findOneBy(['date' => $date]) ?: new \Entity\Report($date);
+        $reportEntity = $this->getReport($date) ?: new \Entity\Report($date);
 
         $reportEntity
             ->setLogin(new \DateTime($report['login']))
@@ -97,10 +100,7 @@ class Report
      */
     public function delete(Request $request): JsonResponse
     {
-        $date = \DateTime::createFromFormat('Y-m-d', str_replace('/', '', $request->getPathInfo()));
-
-        /** @var \Entity\Report $report */
-        $report = $this->em->getRepository('Entity\Report')->findOneBy(['date' => $date]);
+        $report = $this->getReport($this->getDate($request));
         $this->em->remove($report);
         try {
             @$this->em->flush();
@@ -118,17 +118,17 @@ class Report
      */
     public function email(Request $request): JsonResponse
     {
-        $date = \DateTime::createFromFormat('Y-m-d', str_replace('/', '', $request->getPathInfo()));
-        $content = $this->em->getRepository('Entity\Report')->findOneBy(['date' => $date])->getAll();
+        $date = $this->getDate($request);
+        $content = $this->getReport($date)->getAll();
 
         $parameters = Yaml::parseFile(__DIR__.'/../../config/email.yaml');
 
-        $transport = Swift_SmtpTransport::newInstance($parameters['host'], $parameters['port'], $parameters['security'])
+        $transport = (new Swift_SmtpTransport($parameters['host'], $parameters['port'], $parameters['security']))
             ->setUsername($parameters['username'])
             ->setPassword($parameters['password']);
 
-        $mailer = Swift_Mailer::newInstance($transport);
-        $message = Swift_Message::newInstance('Daily Report - '.$date->format('M d Y'))
+        $mailer = new Swift_Mailer($transport);
+        $message = (new Swift_Message('Daily Report - '.$date->format('M d Y')))
             ->setFrom($parameters['username'])
             ->setTo($parameters['sendto']);
 
@@ -140,41 +140,30 @@ class Report
             $message->setBcc($parameters['bcc']);
         }
 
-        $heading = "<strong>Work hours : {$content['login']} - {$content['logout']}</strong>";
-
-        $thead = '<thead style="background: #3c3c3c; color: #fff;">
-                    <th style="padding: 6px; width: 25px;">#</th>
-                    <th style="padding: 6px">Tickets/Tasks</th>
-                    <th style="padding: 6px; width: 70px;">Time spent</th>
-                    <th style="padding: 6px; width: 70px;">Time logged</th>
-                    <th style="padding: 6px">Remarks</th>
-                  </thead>';
-
-        $tr = '';
-        foreach ($content['reportdetails'] as $index => $reportdetail) {
-            $row = $index + 1;
-            $tr .= "<tr>
-                        <td style='padding: 5px'>{$row}</td>
-                        <td style='padding: 5px'>
-                            <div style='word-wrap: break-word'>{$reportdetail['tickets']}</div>
-                        </td>
-                        <td style='padding: 5px'>{$reportdetail['spent_time']}</td>
-                        <td style='padding: 5px'>{$reportdetail['logged_time']}</td>
-                        <td style='padding: 5px'>
-                            <div style='word-wrap: break-word'>{$reportdetail['remarks']}</div>
-                        </td>
-                     </tr>";
-        }
-        $tbody = "<tbody>{$tr}</tbody>";
-        $table = "<table border='1' style='width: 600px; table-layout: fixed'>{$thead}{$tbody}</table>";
-        $body = "<div>{$heading}{$table}</div>";
-
-        $message->setBody($body, 'text/html');
+        $message->setBody($this->twig->render('email.html.twig', ['content' => $content]), 'text/html');
         $result = $mailer->send($message);
         if (!$result) {
             return new JsonResponse(['error' => 'Mail failed!'], 500);
         }
 
         return new JsonResponse(['message' => 'Mail sent successfully!']);
+    }
+
+    /**
+     * @param \DateTime $date
+     * @return \Entity\Report|null|object
+     */
+    private function getReport(\DateTime $date)
+    {
+        return $this->em->getRepository('Entity\Report')->findOneBy(['date' => $date]);
+    }
+
+    /**
+     * @param Request $request
+     * @return bool|\DateTime
+     */
+    private function getDate(Request $request)
+    {
+        return \DateTime::createFromFormat('Y-m-d', str_replace('/', '', $request->getPathInfo()));
     }
 }

@@ -26,7 +26,10 @@ try {
     echo json_encode($e->getMessage());
 }
 
+$twigLoader = new Twig_Loader_Filesystem(__DIR__.'/src/templates');
+$twig = new Twig_Environment($twigLoader);
+
 /** @var Request $request */
 $request = Request::createFromGlobals();
 
-$report = new Api\Report($em);
+$report = new Api\Report($em, $twig);

@@ -33,7 +33,7 @@
                            name="logintime" ng-model="login" placeholder="Login time" ng-required="true" />
                     <input format="MMM Do YYYY" today="true" moment-picker="currentdate" id="currentdate"
                            class="form-control print-margin input-block" name="date" ng-model="currentdate" title="Date of report"
-                           change="report.changeDate()" ng-model-options="{ updateOn: 'blur' }" ng-required="true"/>
+                           change="changeDate()" ng-model-options="{ updateOn: 'blur' }" ng-required="true"/>
                     <input format="hh:mm a" moment-picker="report.logout" class="form-control input-block"
                            name="logout" ng-model="logout" placeholder="Logout time" />
                 </div>
