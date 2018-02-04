@@ -16,6 +16,6 @@ Instructions
 ----------------
 - Update `config/db.yaml` with database connection parameters (like `username`, `host`, `password`, etc)
 - Create a database with the same name as value of `dbname` in `config/db.yml`
-- Run `composer install` (database schema shall update automatically as scripts for updating schema is included in `composer.json`)
+- Run `composer install` (database schema shall update automatically as the script for updating schema is included in `composer.json`)
 - Update `email` parameters in `config/email.yaml`
 - For IE support, replace `scripts.js` with `scripts_ie.js` in `index.html`
